@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Install needed packages
 sudo apt install git build-essential -y
 
@@ -26,8 +28,5 @@ sudo apt install ros-jazzy-desktop -y
 
 # Run setup script on shell start
 grep -qF "source /opt/ros/jazzy/setup.bash" ~/.bashrc || echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
-
-# Update submodules
-git submodule update --init --recursive
 
 reboot
