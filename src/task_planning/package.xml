@@ -3,8 +3,8 @@
 <package format="3">
   <name>task_planning</name>
   <version>0.0.0</version>
-  <description>Package handling high-level decision making</description>
-  <maintainer>?</maintainer>
+  <description>High-level logic of robot arm</description>
+  <maintainer email="misha.nekrasov@gmail.com">mic</maintainer>
   <license>MIT</license>
 
   <test_depend>ament_copyright</test_depend>

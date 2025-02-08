@@ -3,9 +3,11 @@
 <package format="3">
   <name>computer_vision</name>
   <version>0.0.0</version>
-  <description>Package for processing camera input</description>
-  <maintainer>Kirsten</maintainer>
+  <description>Camera-based detection of chess pieces, chessboard, etc</description>
+  <maintainer email="misha.nekrasov@gmail.com">mic</maintainer>
   <license>MIT</license>
+
+  <exec_depend>usb_cam</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

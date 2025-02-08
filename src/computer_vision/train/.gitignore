@@ -1,0 +1,4 @@
+data/**
+
+# The model
+yolov8n.pt
