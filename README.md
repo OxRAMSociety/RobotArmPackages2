@@ -11,6 +11,7 @@ We recommend that you use Ubuntu 24.04 with ROS2 Jazzy Jalisco
 3. Reboot
 4. Then, run `./install_workspace.sh` at the root of this repository. This script might break if run multiple times
 5. (Optional) If you want to run computer vision, install libraries using `install_cv_packages.sh`
+6. Follow README.md for packages you will be running/developing
 
 ## Usage
 Run `source setup.sh` when first opening in a new terminal
