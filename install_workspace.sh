@@ -9,7 +9,8 @@ git submodule update --init --recursive
 colcon build --symlink-install
 
 # Setup rosdep
-sudo rosdep init
+# Do not fail of rosdep already set up
+sudo rosdep init 2> /dev/null || true
 rosdep update
 
 # Venv, used mostly for CV
