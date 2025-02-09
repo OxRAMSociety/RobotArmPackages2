@@ -4,7 +4,7 @@ import rclpy
 from rclpy.node import Node
 
 from cv_bridge import CvBridge
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import Image, CompressedImage
 import cv2
 import numpy as np
 
@@ -54,25 +54,23 @@ def compute_grid_positions(corners, board_size):
 
 
 class ChessboardPublisher(Node):
-    def __init__(self, camera_frequency=30):
+    def __init__(self):
         # Create a publisher
         super().__init__("chessboard_publisher")
 
         # Parameters which can be passed to the node
         # Topic to listen for camera events on
-        # self.declare_parameter("camera_topic", rclpy.Parameter.Type.STRING)
-        # self.camera_topic = self.get_parameter("camera_topic")
+        self.declare_parameter("camera_topic", "/image_raw/compressed")
+        self.camera_topic = self.get_parameter("camera_topic").value
 
         self.chessboard_publisher = self.create_publisher(Image, "chessboard_topic", 10)
 
         # Create an instance of CvBridge
         self.cv_bridge = CvBridge()
-        # Load the video
-        self.video = cv2.VideoCapture(0)  # change this to your video file path
-
-        camera_period = 1.0 / float(camera_frequency)  # seconds
-
-        self.timer = self.create_timer(camera_period, self.on_new_camera_frame)
+        # Subscribe to the video
+        self.subscription = self.create_subscription(
+            CompressedImage, self.camera_topic, self.on_new_camera_frame, 10
+        )
 
     # Turns image gray scale, finds chessboard corners and draws on the corners
     # Logs: Chessboard detected, type of corners, grid positions
@@ -110,14 +108,11 @@ class ChessboardPublisher(Node):
             logger.info("Chessboard corners not detected.")
         return cv_image
 
-    def on_new_camera_frame(self):
-        ret, frame = self.video.read()
-        if not ret:
-            raise RuntimeError("Error reading video capture")
-
+    def on_new_camera_frame(self, msg):
+        frame = self.cv_bridge.compressed_imgmsg_to_cv2(msg)
+        assert frame is not None, "Error reading frame"
         frame = self.process_image(frame)
-        if frame is None:
-            raise RuntimeError("Error processing frame")
+        assert frame is not None, "Error processing frame"
 
         img_msg = self.cv_bridge.cv2_to_imgmsg(frame, "bgr8")
         self.chessboard_publisher.publish(img_msg)
