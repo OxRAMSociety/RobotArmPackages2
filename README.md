@@ -21,20 +21,32 @@ Run `source ./rebuild.sh` in the terminal to rebuild code
 Run `./test.sh` to run the tests for the packages
 
 <!-- ## Running the code: -->
-<!-- In separate terminals -->
-<!-- 1. Start the main scripts -->
-<!--   ```bash -->
-<!--   roslaunch rbx1_scripts rbx1_init.launch -->
-<!--   ``` -->
-<!---->
-<!-- 2. Start the camera (select the appropriate video device and put it instead of -->
-<!--    video0) -->
-<!--   ```bash -->
-<!--   roslaunch rbx1_computer_vision camera_init.launch video_dev:=/dev/video0 -->
-<!--   ``` -->
-<!---->
-<!-- 3. Start YOLO -->
-<!--   ```bash -->
-<!--   roslaunch yolov5_ros yolov5.launch input_image_topic:=/camera/color/image_rect_color device:=cpu -->
-<!--   ``` -->
-<!---->
+
+## Contribution workflow:
+See [this comment](https://github.com/OxRAMSociety/RobotArm/issues/14#issuecomment-2614327934) for a high-level overview of the workflow.
+
+Here are the specific commands that need to be run, for each of the points:
+
+1. Use Github
+2. First, make sure that you are in the main branch. If this command returns an error, you probably have uncommitted changes.
+
+```
+git checkout main
+```
+
+Create a new branch and move to it
+```
+git checkout -b <number>
+```
+3. While developing your code, don't forget to periodically create commits with messages explaining what you did in the commit. It might be easier to use a git helper in your IDE.
+
+When you are ready, make sure you have committed everything you want to push and push your changes to Github
+```
+git push
+```
+
+Then use the Github website to open a pull request.
+
+4. Use Github
+5. Same commands as in point 3, but don't forget to `git pull` and `git push` regularly to reduce the probability of conflicts
+6. Ask one of us to approve your pull request
