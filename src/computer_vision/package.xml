@@ -3,9 +3,17 @@
 <package format="3">
   <name>computer_vision</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Camera-based detection of chess pieces, chessboard, etc</description>
   <maintainer email="misha.nekrasov@gmail.com">mic</maintainer>
   <license>MIT</license>
+
+  <exec_depend>usb_cam</exec_depend>
+
+  <!-- Only required for the launch file of usb_cam, until
+ https://github.com/ros-drivers/usb_cam/commit/98fa950342fa1edd8fd1de81392aeb83a691af14 
+ is available in Ubuntu repos
+ -->
+  <exec_depend>python3-pydantic</exec_depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
