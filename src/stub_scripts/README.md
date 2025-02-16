@@ -1,5 +1,7 @@
-# Scripts that emulate WIP robot packages
+# Scripts that emulate robot packages
+
+For example, creating a "fake camera" that always publishes the same image.
 
 ## List of executables
-- compressed_image_publisher publishes an image repeatedly on a topic, simulating a camera
+- compressed_image_publisher publishes a compressed image repeatedly on a topic, simulating a camera
 Usage example: `ros2 run stub_scripts compressed_image_publisher --ros-args -p input_path:="../computer_vision/test/test_images/chessboards/1.jpeg"`

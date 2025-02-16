@@ -20,10 +20,14 @@ Run `source ./rebuild.sh` in the terminal to rebuild code
 
 Run `./test.sh` to run the tests for the packages
 
-<!-- ## Running the code: -->
+The packages have a README.md file which explains what they do and how to get them set up.
+
+## Helpful resources for ROS2 and git
+There is an [introduction document](https://github.com/OxRAMSociety/RobotArm/blob/main/resources.md) in the RobotArm repository.
 
 ## Contribution workflow:
-See [this comment](https://github.com/OxRAMSociety/RobotArm/issues/14#issuecomment-2614327934) for a high-level overview of the workflow.
+See [this comment](https://github.com/OxRAMSociety/RobotArm/issues/14#issuecomment-2613048568) for an explanation how to figure out what tasks to work on.
+See [this comment](https://github.com/OxRAMSociety/RobotArm/issues/14#issuecomment-2614327934) for a high-level overview of the workflow, i.e. how to use git productively.
 
 Here are the specific commands that need to be run, for each of the points:
 
@@ -50,3 +54,5 @@ Then use the Github website to open a pull request.
 4. Use Github
 5. Same commands as in point 3, but don't forget to `git pull` and `git push` regularly to reduce the probability of conflicts
 6. Ask one of us to approve your pull request
+
+
