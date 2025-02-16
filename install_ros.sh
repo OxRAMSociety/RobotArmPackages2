@@ -32,7 +32,7 @@ sudo apt install ros-jazzy-desktop -y
 # Run setup script on shell start
 grep -qF "source /opt/ros/jazzy/setup.bash" ~/.bashrc || echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 # Tell the user to not forget to run the setup script
-grep -qF "Remember to run 'source setup.sh'" ~/.bashrc || echo "echo -e \"\033[0;31mRemember to run 'source setup.sh'\"" >> ~/.bashrc
+grep -qF "Remember to run 'source setup.sh'" ~/.bashrc || echo "echo -e \"\033[0;31mRemember to run 'source setup.sh'\033[0;0m\"" >> ~/.bashrc
 
 # Install python-venv
 sudo apt install python3.12-venv -y
