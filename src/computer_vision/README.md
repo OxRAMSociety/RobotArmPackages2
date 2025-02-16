@@ -1,7 +1,7 @@
 # Setup
 
 1. (Optional) If you are planning on training the YOLO model, copy `.roboflow_key.example` to `.roboflow_key`, get your Roboflow key and write it into the file
-2. Get camera calibration and parameter files and put them into `config/cam_params.yaml` and `config/camera_info_template.yaml`. This can be done in 2 ways:
+2. Get camera calibration and parameter files and put them into `config/cam_params.yaml` and `config/camera_info.yaml`. This can be done in 2 ways:
 - Copy over the templates `config/cam_params_template.yaml` and `config/camera_info_template.yaml`
 - Calibrate the camera by yourself (See the section below).
 
