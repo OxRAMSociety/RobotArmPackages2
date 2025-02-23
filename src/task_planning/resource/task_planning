@@ -1,1 +1,25 @@
-Hello Ashraf
+inputs:
+
+    position of board relative to camera
+    positions of pieces, identity relative to camera
+
+outputs (ros actions):
+
+    one action
+        moving arm to position
+        grip position
+
+message files
+
+
+Step 1:
+input: array of (x,y) coordinates of the corners of the chess-board pieces
+
+We want to convert this into chess-board squares (e.g a2, c9, etc), i.e write a function which takes in the a given (x,y) coordinate and outputs the square it is on
+
+
+Step 2:
+integrate a chess-bot which takes in the data of the pieces on the board, and tells us the next move
+
+Step 3:
+Write a function which takes in a chess move and converts it into (START,END) where START is a 3D coordinate of where the robot arm should move to pick up the chess piece and END is where it should move the piece to
