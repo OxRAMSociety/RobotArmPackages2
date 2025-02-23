@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'hardware_interface = motion_planning.hardware_interface:main'
         ],
     },
 )

@@ -1,24 +1,25 @@
 from setuptools import find_packages, setup
 
-package_name = "computer_vision"
+package_name = "stub_scripts"
 
 setup(
     name=package_name,
     version="0.0.0",
-    packages=find_packages(exclude=["test", "train"]),
+    packages=find_packages(exclude=["test"]),
     data_files=[
         ("share/ament_index/resource_index/packages", ["resource/" + package_name]),
         ("share/" + package_name, ["package.xml"]),
-        (f"share/{package_name}/config", ["config/camera_info.yaml"]),
     ],
     install_requires=["setuptools"],
     zip_safe=True,
     maintainer="mic",
     maintainer_email="misha.nekrasov@gmail.com",
-    description="Camera-based detection of chess pieces, chessboard, etc",
+    description="TODO: Package description",
     license="MIT",
     tests_require=["pytest"],
     entry_points={
-        "console_scripts": ["board_detection = computer_vision.board_detection:main"],
+        "console_scripts": [
+            "compressed_image_publisher = stub_scripts.compressed_image_publisher:main"
+        ],
     },
 )

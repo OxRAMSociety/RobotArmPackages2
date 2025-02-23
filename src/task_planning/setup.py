@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'state_machine = task_planning.state_machine:main'
         ],
     },
 )
