@@ -10,6 +10,9 @@ TODO: calibrate camera
 TODO: optimise params
 
 # Usage
+## Running the nodes
+`board_detection` node doesn't use any extra parameters: just do `ros2 run computer_vision board_detection`
+
 ## Debugging
 To start the camera node directly, run `ros2 run usb_cam usb_cam_node_exe --ros-args --params-file config/cam_params.yaml`
 

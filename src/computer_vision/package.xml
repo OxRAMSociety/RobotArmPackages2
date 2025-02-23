@@ -8,6 +8,7 @@
   <license>MIT</license>
 
   <exec_depend>usb_cam</exec_depend>
+  <exec_depend>image_transport_plugins</exec_depend>
 
   <!-- Only required for the launch file of usb_cam, until
  https://github.com/ros-drivers/usb_cam/commit/98fa950342fa1edd8fd1de81392aeb83a691af14 
