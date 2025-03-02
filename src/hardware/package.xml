@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>hardware_interface</name>
+  <name>hardware</name>
   <version>0.0.0</version>
-  <description>Send commands to the Arduino</description>
+  <description>Communicates ROS2 messages and actions to arduino</description>
   <maintainer email="misha.nekrasov@gmail.com">mic</maintainer>
   <license>MIT</license>
 
