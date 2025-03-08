@@ -3,7 +3,8 @@
 import rclpy
 from rclpy.node import Node
 import serial
-from interfaces.msg import Num
+import json
+import time
 
 
 class SerialServer(Node):
@@ -11,30 +12,34 @@ class SerialServer(Node):
         super().__init__("serial_server")
         self.device_name = "/dev/ttyACM0"
         self.ser = serial.Serial(self.device_name, 9600, timeout=0.1)
-        self.subscriber = self.create_subscription(
-            Num, "topic", self.serial_listener_callback, 10
-        )
-        # self.subscriber
+        # self.subscriber = self.create_subscription(
+        #     Num, "topic", self.serial_listener_callback, 10
+        # )
+        # # self.subscriber
+
+        # Solves a bug where writing directly after creating the serial
+        # somehow stops all reads from occuring
+        time.sleep(1)
         self.ser.reset_input_buffer()
 
+        self.num_messages_sent = 0
+        self.timer = self.create_timer(1.0 / 100, self.toggle_led)
+
     def send_cmd(self, cmd):
+        cmd = json.dumps(cmd)
         print("Sending to arduino: " + cmd)
-        self.ser.write(bytes(cmd, "utf-8"))
+        self.ser.write(bytes(cmd + "\n", "utf-8"))
+        self.ser.flush()
 
     def receive_cmd(self):
-        try:
+        while self.ser.in_waiting:
             line = self.ser.readline().decode("utf-8").rstrip()
-            line1 = self.ser.readline().decode("utf-8").rstrip()
-            line2 = self.ser.readline().decode("utf-8").rstrip()
-        except:
-            line = str(self.ser.readline())
-            line1 = str(self.ser.readline())
-            line2 = str(self.ser.readline())
-        print("Received from arduino: " + str(line1))
+            print(line)
 
-    def serial_listener_callback(self, msg):
-        print("message received from rostalker: ", msg.num)
-        self.send_cmd("<Text," + str(msg.num) + ",19.2>")
+    def toggle_led(self):
+        self.num_messages_sent += 1
+        print(f"Num messages received: {self.num_messages_sent}")
+        self.send_cmd({"turn_on_led": self.num_messages_sent % 2})
         self.receive_cmd()
 
 

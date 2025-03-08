@@ -1,103 +1,53 @@
-// Example 5 - Receive with start- and end-markers combined with parsing
+#include <ArduinoJson.h>
 
-const byte numChars = 32;
-char receivedChars[numChars];
-char tempChars[numChars];        // temporary array for use when parsing
+int num_messages_received = 0;
 
-      // variables to hold the parsed data
-char messageFromPC[numChars] = {0};
-int integerFromPC = 0;
-float floatFromPC = 0.0;
+class DataInputError {
+  bool stream_timeout;
+  DeserializationError deserialization_error;
 
-boolean newData = false;
+public:
+  DataInputError(bool s, DeserializationError d)
+    : stream_timeout(s), deserialization_error(d) {}
+  bool is_ok() {
+    return this->stream_timeout == false && this->deserialization_error == DeserializationError::Ok;
+  }
+};
 
-//============
+DataInputError read_data(JsonDocument &out) {
+  const String in = Serial.readStringUntil('\n');
+  if (in == NULL) return DataInputError(true, NULL);
+  return DataInputError(false, deserializeJson(out, in));
+}
+
+void showParsedData(JsonDocument json) {
+  bool turn_on_led = json["turn_on_led"];
+  Serial.print("New LED state: ");
+  Serial.println(turn_on_led);
+  num_messages_received += 1;
+  Serial.print("Num messages received: ");
+  Serial.println(num_messages_received);
+
+  if (turn_on_led) {
+    digitalWrite(LED_BUILTIN, HIGH);
+  } else {
+    digitalWrite(LED_BUILTIN, LOW);
+  }
+}
 
 void setup() {
-    pinMode(LED_BUILTIN, OUTPUT);
-    Serial.begin(9600);
-    Serial.println("This demo expects 3 pieces of data - text, an integer and a floating point value");
-    Serial.println("Enter data in this style <HelloWorld, 12, 24.7>  ");
-    Serial.println();
-}
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
 
-//============
+  while (!Serial) continue;
+}
 
 void loop() {
-    recvWithStartEndMarkers();
-    if (newData == true) {
-        strcpy(tempChars, receivedChars);
-            // this temporary copy is necessary to protect the original data
-            //   because strtok() used in parseData() replaces the commas with \0
-        parseData();
-        showParsedData();
-        newData = false;
-    }
-}
-
-//============
-
-void recvWithStartEndMarkers() {
-    static boolean recvInProgress = false;
-    static byte ndx = 0;
-    char startMarker = '<';
-    char endMarker = '>';
-    char rc;
-
-    while (Serial.available() > 0 && newData == false) {
-        rc = Serial.read();
-
-        if (recvInProgress == true) {
-            if (rc != endMarker) {
-                receivedChars[ndx] = rc;
-                ndx++;
-                if (ndx >= numChars) {
-                    ndx = numChars - 1;
-                }
-            }
-            else {
-                receivedChars[ndx] = '\0'; // terminate the string
-                recvInProgress = false;
-                ndx = 0;
-                newData = true;
-            }
-        }
-
-        else if (rc == startMarker) {
-            recvInProgress = true;
-        }
-    }
-}
-
-//============
-
-void parseData() {      // split the data into its parts
-
-    char * strtokIndx; // this is used by strtok() as an index
-
-    strtokIndx = strtok(tempChars,",");      // get the first part - the string
-    strcpy(messageFromPC, strtokIndx); // copy it to messageFromPC
- 
-    strtokIndx = strtok(NULL, ","); // this continues where the previous call left off
-    integerFromPC = atoi(strtokIndx);     // convert this part to an integer
-
-    strtokIndx = strtok(NULL, ",");
-    floatFromPC = atof(strtokIndx);     // convert this part to a float
-
-}
-
-//============
-
-void showParsedData() {
-    Serial.print("Message ");
-    Serial.println(messageFromPC);
-    Serial.print("Integer ");
-    Serial.println(integerFromPC);
-    Serial.print("Float ");
-    Serial.println(floatFromPC);
-    if (integerFromPC<10) {
-      digitalWrite(LED_BUILTIN, HIGH);
-    } else {
-      digitalWrite(LED_BUILTIN, LOW);
-    }
+  JsonDocument json;
+  const DataInputError err = read_data(json);
+  if (err.is_ok()) {
+      showParsedData(json);
+  } else {
+    Serial.println("Read error");
+  }
 }
