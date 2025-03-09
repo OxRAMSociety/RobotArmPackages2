@@ -27,7 +27,7 @@ class SerialServer(Node):
 
     def send_cmd(self, cmd):
         cmd = json.dumps(cmd)
-        print("Sending to arduino: " + cmd)
+        print("> "+cmd)
         self.ser.write(bytes(cmd + "\n", "utf-8"))
         self.ser.flush()
 
@@ -40,14 +40,17 @@ class SerialServer(Node):
 
         while self.ser.in_waiting:
             line = self.ser.readline().decode("utf-8").rstrip()
-            print(line)
+            print("\033[95mReply from Arduino:\033[0m")
+            print("< "+line)
 
     def toggle_led(self):
-        self.num_messages_sent += 1
-        print(f"Num messages sent: {self.num_messages_sent}")
+        print()
+        self.num_messages_sent += 1  
+        print(f"\033[96mROS: Sending message #{self.num_messages_sent}\033[0m")
         self.send_cmd({"turn_on_led": self.num_messages_sent % 2})
         self.receive_cmd()
-        print("-----")
+        print()
+        print("========================")
 
 
 def main(args=None):
