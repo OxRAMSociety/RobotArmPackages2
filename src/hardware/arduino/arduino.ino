@@ -1,4 +1,14 @@
 #include <ArduinoJson.h>
+// include AccelStepper, docs here: https://www.airspayce.com/mikem/arduino/AccelStepper/index.html
+// also here: https://hackaday.io/project/183279/details/ 
+#include <AccelStepper.h>
+
+
+
+// accelstepper stuff
+AccelStepper myStepper(AccelStepper::DRIVER, 3, 2);
+
+// json stuff
 
 int num_messages_received = 0;
 
@@ -30,12 +40,27 @@ void showParsedData(JsonDocument json) {
 
   if (turn_on_led) {
     digitalWrite(LED_BUILTIN, HIGH);
+    myStepper.setSpeed(500);
   } else {
     digitalWrite(LED_BUILTIN, LOW);
+    myStepper.setSpeed(0);
   }
 }
 
+
+
+
+
+
+
+
+
 void setup() {
+
+  // accelstepper setup
+  myStepper.setMaxSpeed(1000);
+  myStepper.setSpeed(500);
+
   pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(9600);
 
@@ -50,4 +75,7 @@ void loop() {
   } else {
     Serial.println("Read error");
   }
+
+  // accelstepper stuff
+  myStepper.runSpeed();
 }
