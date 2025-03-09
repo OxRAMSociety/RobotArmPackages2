@@ -23,7 +23,7 @@ class SerialServer(Node):
         self.ser.reset_input_buffer()
 
         self.num_messages_sent = 0
-        self.timer = self.create_timer(1.0 / 100, self.toggle_led)
+        self.timer = self.create_timer(1.0 / 10, self.toggle_led)
 
     def send_cmd(self, cmd):
         cmd = json.dumps(cmd)
@@ -31,16 +31,23 @@ class SerialServer(Node):
         self.ser.write(bytes(cmd + "\n", "utf-8"))
         self.ser.flush()
 
-    def receive_cmd(self):
+    def receive_cmd(self, max_wait=0.1, poll_delay=0.01):
+
+        # Wait for a message to come in
+        start_time = time.time()
+        while not self.ser.in_waiting and time.time() - start_time <= max_wait:
+            time.sleep(poll_delay)
+
         while self.ser.in_waiting:
             line = self.ser.readline().decode("utf-8").rstrip()
             print(line)
 
     def toggle_led(self):
         self.num_messages_sent += 1
-        print(f"Num messages received: {self.num_messages_sent}")
+        print(f"Num messages sent: {self.num_messages_sent}")
         self.send_cmd({"turn_on_led": self.num_messages_sent % 2})
         self.receive_cmd()
+        print("-----")
 
 
 def main(args=None):

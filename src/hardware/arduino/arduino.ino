@@ -22,11 +22,11 @@ DataInputError read_data(JsonDocument &out) {
 
 void showParsedData(JsonDocument json) {
   bool turn_on_led = json["turn_on_led"];
-  Serial.print("New LED state: ");
-  Serial.println(turn_on_led);
   num_messages_received += 1;
   Serial.print("Num messages received: ");
-  Serial.println(num_messages_received);
+  Serial.print(num_messages_received);
+  Serial.print("; New LED state: ");
+  Serial.println(turn_on_led);
 
   if (turn_on_led) {
     digitalWrite(LED_BUILTIN, HIGH);
