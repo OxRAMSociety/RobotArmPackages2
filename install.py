@@ -8,6 +8,8 @@ RESET_COLOUR = "\033[0m"
 
 PACKAGE_PATH = f"{os.getcwd()}/src"
 CV_PATH = PACKAGE_PATH + "/computer_vision"
+CV_CONFIG_PATH = CV_PATH + "/config"
+CV_TRAIN_PATH = CV_PATH + "/train"
 
 
 def info(to_print):
@@ -36,7 +38,6 @@ def reinstall(need_to_reboot):
         info("Setting up computer vision package")
         # These changes are required to be able to build
         # Required even if not running CV
-        CV_CONFIG_PATH = CV_PATH + "/config"
 
         # Copy over configs for "cam_params" and "camera_info"
         for fname in ["cam_params", "camera_info"]:
@@ -75,8 +76,8 @@ def run_first_install(args):
 def run_reinstall(args):
     reinstall(need_to_reboot=False)
 
-def setup_cv(args):
-    CV_TRAIN_PATH = CV_PATH + "/train"
+
+def setup_cv_training(args):
 
     # Write the roboflow key if needed
     if not os.path.isfile(CV_TRAIN_PATH + "/.roboflow_key"):
@@ -84,8 +85,16 @@ def setup_cv(args):
         with open(CV_TRAIN_PATH + "/.roboflow_key", "w") as f:
             f.write(key)
 
-    # TODO:
-    # Install the packages
+    # Create a venv specifically for computer vision training
+    if not os.path.isdir(f"{CV_TRAIN_PATH}/.venv"):
+        run_command(
+            f"cd {CV_TRAIN_PATH}; python3 -m venv .venv",
+            source_functions=False,
+        )
+    run_command(
+        f"cd {CV_TRAIN_PATH}; source .venv/bin/activate; pip install -r requirements.txt",
+        source_functions=False,
+    )
 
 def setup_moveit(args):
     run_command("install_moveit")
@@ -107,9 +116,9 @@ reinstall_parser = subparsers.add_parser(
 reinstall_parser.set_defaults(func=run_reinstall)
 
 setup_cv_parser = subparsers.add_parser(
-    "setup_cv", help="Sets up CV packages"
+    "setup_cv_training", help="Sets up CV to be able to train the model"
 )
-setup_cv_parser.set_defaults(func=setup_cv)
+setup_cv_parser.set_defaults(func=setup_cv_training)
 
 setup_moveit_parser = subparsers.add_parser(
     "setup_moveit", help="Sets up moveit packages"
