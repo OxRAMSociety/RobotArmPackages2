@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -e
 
 install_ros() {
+	set -e
 	# Install needed packages
 	sudo apt install git build-essential -y
 
@@ -34,12 +34,10 @@ install_ros() {
 	grep -qF "source /opt/ros/jazzy/setup.bash" ~/.bashrc || echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 	# Tell the user to not forget to run the setup script
 	grep -qF "Remember to run 'source setup.sh'" ~/.bashrc || echo "echo -e \"\033[0;31mRemember to run 'source setup.sh'\033[0;0m\"" >> ~/.bashrc
-
-	# Install python-venv
-	sudo apt install python3.12-venv -y
 }
 
 install_workspace(){
+	set -e
 	# Update submodules
 	git submodule update --init --recursive
 
@@ -50,82 +48,25 @@ install_workspace(){
 	# Do not fail of rosdep already set up
 	sudo rosdep init 2> /dev/null || true
 	rosdep update
-
-	# Venv, used mostly for CV
-	python3 -m venv .venv
-	source .venv/bin/activate
 }
 
 install_cv() {
-	source .venv/bin/activate
+	set -e
+	false
 	pip3 install roboflow ultralytics
 }
 
 install_moveit(){
+	set -e
 	# Install mixin
 	sudo apt install python3-colcon-common-extensions -y
 	sudo apt install python3-colcon-mixin -y
-	colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
+
+	# This might fail if default repo already exists
+	# That is fine
+	colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml || true
 	colcon mixin update default
 
 	# install vcstool
 	sudo apt install python3-vcstool -y
 }
-
-
-install_ros_flag=""
-install_workspace_flag=""
-install_cv_flag=""
-install_moveit_flag=""
-
-# Handle flags
-# https://stackoverflow.com/questions/7069682/how-to-get-arguments-with-flags-in-bash#21128172
-while test $# -gt 0; do
-	case "$1" in
-		--all)
-			shift
-			install_ros_flag="y"
-			install_workspace_flag="y"
-			install_cv_flag="y"
-			install_moveit_flag="y"
-			;;
-		--initial-setup)
-			shift
-			install_ros_flag="y"
-			install_workspace_flag="y"
-		;;
-		--ros)
-			shift
-			install_ros_flag="y"
-		;;
-		--workspace)
-			shift
-			install_workspace_flag="y"
-		;;
-		--cv)
-			shift
-			install_cv_flag="y"
-		;;
-		--moveit)
-			shift
-			install_moveit_flag="y"
-		;;
-		*)
-			echo "$1 is not a recognized flag!"
-			return 1;
-		;;
-	esac
-done
-
-if [ -n "$install_ros_flag" ]; then
-	install_ros
-fi
-if [ -n "$install_workspace_flag" ]; then
-	install_workspace
-fi
-if [ -n "$install_cv_flag" ]; then
-	install_cv
-fi
-if [ -n "$install_moveit_flag" ]; then
-	install_moveit
-fi
