@@ -1,4 +1,4 @@
 #!/bin/bash
 
 source .venv/bin/activate
-pip3 install roboflow ultralytics
+pip3 install roboflow ultralytics supervision
