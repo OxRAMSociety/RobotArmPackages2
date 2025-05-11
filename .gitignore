@@ -29,3 +29,4 @@ COLCON_IGNORE
 AMENT_IGNORE
 
 .venv
+.need_to_resume_installation
