@@ -50,12 +50,6 @@ install_workspace(){
 	rosdep update
 }
 
-install_cv() {
-	set -e
-	false
-	pip3 install roboflow ultralytics
-}
-
 install_moveit(){
 	set -e
 	# Install mixin
