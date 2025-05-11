@@ -1,0 +1,4 @@
+string[] fen
+---
+int64 from_square
+int64 to_square
