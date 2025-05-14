@@ -23,7 +23,7 @@ class SerialServer(Node):
         self.ser.reset_input_buffer()
 
         self.num_messages_sent = 0
-        self.timer = self.create_timer(100.0 / 10, self.toggle_led)
+        self.timer = self.create_timer(10.0 / 10, self.toggle_led)
 
     def send_cmd(self, cmd):
         cmd = json.dumps(cmd)
