@@ -1,10 +1,11 @@
 # /usr/bin/python3
 # Code modified from https://github.com/AnrdyShmrdy/ros2_serial_interface
-import rclpy
-from rclpy.node import Node
-import serial
 import json
 import time
+
+import rclpy
+import serial
+from rclpy.node import Node
 
 
 class SerialServer(Node):
@@ -23,11 +24,12 @@ class SerialServer(Node):
         self.ser.reset_input_buffer()
 
         self.num_messages_sent = 0
+        self.position = 0
         self.timer = self.create_timer(10.0 / 10, self.toggle_led)
 
     def send_cmd(self, cmd):
         cmd = json.dumps(cmd)
-        print("> "+cmd)
+        print("> " + cmd)
         self.ser.write(bytes(cmd + "\n", "utf-8"))
         self.ser.flush()
 
@@ -41,13 +43,17 @@ class SerialServer(Node):
         while self.ser.in_waiting:
             line = self.ser.readline().decode("utf-8").rstrip()
             print("\033[95mReply from Arduino:\033[0m")
-            print("< "+line)
+            print("< " + line)
 
     def toggle_led(self):
         print()
-        self.num_messages_sent += 1  
-        print(f"\033[96mROS: Sending message #{self.num_messages_sent}\033[0m")
-        self.send_cmd({"turn_on_led": self.num_messages_sent % 2})
+        if self.num_messages_sent % 10 == 0:
+            self.position += 3 * 8 * 200
+        # elif self.num_messages_sent % 10 == 5:
+        #     self.position = 0
+        self.num_messages_sent += 1
+
+        self.send_cmd({"motor_1": {"position": self.position}})
         self.receive_cmd()
         print()
         print("========================")

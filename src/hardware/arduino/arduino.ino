@@ -4,8 +4,8 @@
 #include <AccelStepper.h>
 #include "data_structures.h"
 
-#define DIR_PIN 2
-#define STEP_PIN 3
+#define DIR_PIN 2 // CW+
+#define STEP_PIN 3 // CLK+
 #define MOTOR_INTERFACE_TYPE 1
 
 #define SERIAL_QUEUE_LENGTH 300
@@ -13,52 +13,50 @@
 char serial_buf[SERIAL_QUEUE_LENGTH];
 SerialQueue serial_queue = SerialQueue(serial_buf, SERIAL_QUEUE_LENGTH);
 
-// accelstepper stuff
 AccelStepper stepper = AccelStepper(MOTOR_INTERFACE_TYPE, STEP_PIN, DIR_PIN);
 
-// json stuff
+unsigned long last_loop_time;
 
-int num_messages_received = 0;
+void useParsedData(JsonDocument json) {
+  int position = json["motor_1"]["position"];
 
-void showParsedData(JsonDocument json) {
-  bool turn_on_led = json["turn_on_led"];
-  num_messages_received += 1;
-  Serial.print("Receiving message #");
-  Serial.print(num_messages_received);
-  Serial.print("; New LED state: ");
-  Serial.println(turn_on_led);
-
-  if (turn_on_led) {
-    digitalWrite(LED_BUILTIN, HIGH);
-    stepper.setSpeed(500);
-  } else {
-    digitalWrite(LED_BUILTIN, LOW);
-    stepper.setSpeed(0);
+  if(position != stepper.targetPosition()) {
+    // Resets speed, so don't call it in a loop
+    stepper.moveTo(position);
   }
 }
 
 void setup() {
 
   // accelstepper setup
-  stepper.setMaxSpeed(1000);
-  stepper.setAcceleration(500);
+  stepper.setMaxSpeed(1500);
+  stepper.setAcceleration(1000);
 
-  pinMode(LED_BUILTIN, OUTPUT);
   Serial.begin(9600);
 
   while (!Serial) continue;
+  last_loop_time = millis();
 }
 
 void loop() {
+
+
+  unsigned long delta = millis() - last_loop_time;
+  if (delta > 3) {
+    Serial.println("{\"overrun_delta\":" + String(delta));
+  }
+  last_loop_time = millis();
+
+
   JsonDocument json;
   const SerialReadResult res = serial_queue.try_get_json(json);
   if (!res.is_ok()) {
       Serial.print("Read error: ");
       Serial.println(res.c_str());
   } else if (res.is_data_available()){
-      showParsedData(json);
+      useParsedData(json);
   }
 
   // accelstepper stuff
-  stepper.runSpeed();
+  stepper.run();
 }
