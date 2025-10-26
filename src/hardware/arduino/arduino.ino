@@ -2,11 +2,8 @@
 // include AccelStepper, docs here: https://www.airspayce.com/mikem/arduino/AccelStepper/index.html
 // also here: https://hackaday.io/project/183279/details/ 
 #include <AccelStepper.h>
-#include <MultiStepper.h>
 #include "data_structures.h"
 
-#define DIR_PIN 2 // CW+
-#define STEP_PIN 3 // CLK+
 #define MOTOR_INTERFACE_TYPE 1
 
 #define SERIAL_QUEUE_LENGTH 300
@@ -32,7 +29,7 @@ void setup() {
     steppers[i] = AccelStepper(MOTOR_INTERFACE_TYPE, step_pin, dir_pin);
 
     // NOTE: doesn't affect MultiStepper
-    steppers[i].setMaxSpeed(1500);
+    steppers[i].setMaxSpeed(3000);
     steppers[i].setAcceleration(1000);
 
     // Disable all motors when not in use
@@ -47,11 +44,22 @@ void setup() {
 }
 
 void useParsedData(JsonDocument json) {
-  int position = json["motor_1"]["position"];
+  for (int i = 0; i < NUM_MOTORS; i++) {
+    char enable_pin = enable_pins[i];
+    
+    String motor_key = String("motor_") + i;
+    auto motor_json = json[motor_key].as<JsonObject>();
+    if (motor_json["position"].is<int>()) {
+      long position = motor_json["position"];
 
-  if(position != stepper.targetPosition()) {
-    // Resets speed, so don't call it in a loop
-    stepper.moveTo(position);
+      auto &stepper = steppers[i];
+      // Activate
+      digitalWrite(enable_pin, LOW);
+      if(position != stepper.targetPosition()) {
+        // Resets speed, so don't call it in a loop
+        stepper.moveTo(position);
+      }
+    }
   }
 }
 
@@ -73,8 +81,6 @@ void loop() {
 
   // accelstepper stuff
   for (int i = 0; i < NUM_MOTORS; i++) {
-    AccelStepper stepper = steppers[i];
-    char enable_pin = enable_pins[i];
-    stepper.run();
+    steppers[i].run();
   }
 }

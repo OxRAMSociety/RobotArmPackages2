@@ -25,7 +25,7 @@ class SerialServer(Node):
 
         self.num_messages_sent = 0
         self.position = 0
-        self.timer = self.create_timer(10.0 / 10, self.toggle_led)
+        self.timer = self.create_timer(10.0 / 10, self.move_motor)
 
     def send_cmd(self, cmd):
         cmd = json.dumps(cmd)
@@ -45,7 +45,7 @@ class SerialServer(Node):
             print("\033[95mReply from Arduino:\033[0m")
             print("< " + line)
 
-    def toggle_led(self):
+    def move_motor(self):
         print()
         if self.num_messages_sent % 10 == 0:
             self.position += 3 * 8 * 200
@@ -53,7 +53,7 @@ class SerialServer(Node):
         #     self.position = 0
         self.num_messages_sent += 1
 
-        self.send_cmd({"motor_1": {"position": self.position}})
+        self.send_cmd({"motor_0": {"position": self.position}})
         self.receive_cmd()
         print()
         print("========================")

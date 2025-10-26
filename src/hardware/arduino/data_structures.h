@@ -16,12 +16,12 @@ class SerialReadResult {
 public:
   SerialReadResult(SerialQueueState s, DeserializationError d)
     : _state(s), _deserialization_error(d) {}
-  bool is_ok() {
+  bool is_ok() const {
     return (this->_state == SerialQueueState::OkReading || this->_state == SerialQueueState::OkDone) && 
     this->_deserialization_error == DeserializationError::Ok;
   }
 
-  bool is_data_available() {
+  bool is_data_available() const {
     return is_ok() && _state == SerialQueueState::OkDone;
   }
 
@@ -84,7 +84,7 @@ class SerialQueue {
       // if end of line, return the line
       else if (new_char == '\n') {
         // Terminate the string
-        if(!_push(NULL)) {
+        if(!_push(0x00)) {
           _state = SerialQueueState::Overflow;
           return _state;
         } else {
