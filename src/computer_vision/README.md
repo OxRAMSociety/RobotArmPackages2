@@ -16,6 +16,6 @@ TODO: optimise params
 ## Debugging
 To start the camera node directly, run `ros2 run usb_cam usb_cam_node_exe --ros-args --params-file config/cam_params.yaml`
 
-To simulate a camera with an image, run `ros2 run stub_scripts compressed_image_publisher --ros-args -p input_path:="test/test_images/chessboards/1.jpeg"`, where the image path can be replaced for other images
+To simulate a camera with an image, run `ros2 run stub_scripts compressed_image_publisher --ros-args -p input_path:="src/computer_vision/test/test_images/chessboards/1.jpeg"`, where the image path can be replaced for other images
 
 To view camera output, run `rqt`, select "Plugins/visualization/Image view" and select the correct topic
