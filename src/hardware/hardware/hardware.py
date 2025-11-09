@@ -2,6 +2,7 @@
 # Code modified from https://github.com/AnrdyShmrdy/ros2_serial_interface
 import json
 import time
+import signal
 
 import rclpy
 import serial
@@ -48,12 +49,15 @@ class SerialServer(Node):
     def move_motor(self):
         print()
         if self.num_messages_sent % 10 == 0:
-            self.position += 3 * 8 * 200
+            self.position += 3 * 8 * 200 # rotations * microsteps * steps for 3 rotations
         # elif self.num_messages_sent % 10 == 5:
         #     self.position = 0
         self.num_messages_sent += 1
 
-        self.send_cmd({"motor_0": {"position": self.position}})
+        # self.send_cmd({"motor_0": {"position": self.position}})
+        # self.send_cmd({"motor_1": {"position": self.position}})
+        self.send_cmd({"motor_2": {"position": self.position}})
+        self.send_cmd({"motor_3": {"position": -self.position}})
         self.receive_cmd()
         print()
         print("========================")
@@ -62,8 +66,16 @@ class SerialServer(Node):
 def main(args=None):
     rclpy.init(args=args)
     serial_server = SerialServer()
-    rclpy.spin(serial_server)
 
+    def interrupt_handler(sig, frame):
+        print("Aborting")
+        serial_server.send_cmd({"killswitch": True})
+
+        import sys
+        sys.exit()
+
+    signal.signal(signal.SIGINT, interrupt_handler)
+    rclpy.spin(serial_server)
 
 if __name__ == "__main__":
     main()

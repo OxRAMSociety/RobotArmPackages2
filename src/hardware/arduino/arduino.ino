@@ -20,6 +20,7 @@ AccelStepper steppers[NUM_MOTORS];
 
 unsigned long last_loop_time;
 
+bool is_running = true;
 
 void setup() {
   for (int i = 0; i < NUM_MOTORS; i++) {
@@ -41,9 +42,18 @@ void setup() {
 
   while (!Serial) continue;
   last_loop_time = millis();
+
+  is_running = true;
 }
 
 void useParsedData(JsonDocument json) {
+  String keyswitch_key = "killswitch";
+  bool killswitch = json[keyswitch_key];
+  if (killswitch) {
+    is_running = false;
+    return;
+  }
+  
   for (int i = 0; i < NUM_MOTORS; i++) {
     char enable_pin = enable_pins[i];
     
@@ -79,6 +89,9 @@ void loop() {
       useParsedData(json);
   }
 
+  if (!is_running){
+    return;
+  }
   // accelstepper stuff
   for (int i = 0; i < NUM_MOTORS; i++) {
     steppers[i].run();
