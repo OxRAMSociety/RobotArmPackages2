@@ -8,10 +8,10 @@
 
 #define SERIAL_QUEUE_LENGTH 300
 
-#define NUM_MOTORS 7
-char dir_pins[NUM_MOTORS] = {30, 32, 34, 36, 38, 40, 42};
-char step_pins[NUM_MOTORS] = {31, 33, 35, 37, 39, 41, 43};
-char enable_pins[NUM_MOTORS] = {2, 3, 4, 5, 6, 7, 8};
+#define NUM_MOTORS 6
+char dir_pins[NUM_MOTORS] = {51, 45, 39, 12, 9, 6};
+char step_pins[NUM_MOTORS] = {53, 47, 41, 11, 8, 5};
+char enable_pins[NUM_MOTORS] = {49, 43, 37, 13, 10, 7};
 
 char serial_buf[SERIAL_QUEUE_LENGTH];
 SerialQueue serial_queue = SerialQueue(serial_buf, SERIAL_QUEUE_LENGTH);
@@ -20,6 +20,7 @@ AccelStepper steppers[NUM_MOTORS];
 
 unsigned long last_loop_time;
 
+bool is_running = true;
 
 void setup() {
   for (int i = 0; i < NUM_MOTORS; i++) {
@@ -41,9 +42,18 @@ void setup() {
 
   while (!Serial) continue;
   last_loop_time = millis();
+
+  is_running = true;
 }
 
 void useParsedData(JsonDocument json) {
+  String keyswitch_key = "killswitch";
+  bool killswitch = json[keyswitch_key];
+  if (killswitch) {
+    is_running = false;
+    return;
+  }
+  
   for (int i = 0; i < NUM_MOTORS; i++) {
     char enable_pin = enable_pins[i];
     
@@ -79,6 +89,9 @@ void loop() {
       useParsedData(json);
   }
 
+  if (!is_running){
+    return;
+  }
   // accelstepper stuff
   for (int i = 0; i < NUM_MOTORS; i++) {
     steppers[i].run();
