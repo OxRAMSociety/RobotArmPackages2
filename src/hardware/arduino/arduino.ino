@@ -8,10 +8,10 @@
 
 #define SERIAL_QUEUE_LENGTH 300
 
-#define NUM_MOTORS 7
-char dir_pins[NUM_MOTORS] = {30, 32, 34, 36, 38, 40, 42};
-char step_pins[NUM_MOTORS] = {31, 33, 35, 37, 39, 41, 43};
-char enable_pins[NUM_MOTORS] = {2, 3, 4, 5, 6, 7, 8};
+#define NUM_MOTORS 6
+char dir_pins[NUM_MOTORS] = {51, 45, 39, 12, 9, 6};
+char step_pins[NUM_MOTORS] = {53, 47, 41, 11, 8, 5};
+char enable_pins[NUM_MOTORS] = {49, 43, 37, 13, 10, 7};
 
 char serial_buf[SERIAL_QUEUE_LENGTH];
 SerialQueue serial_queue = SerialQueue(serial_buf, SERIAL_QUEUE_LENGTH);

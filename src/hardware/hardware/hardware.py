@@ -14,6 +14,7 @@ class SerialServer(Node):
         super().__init__("serial_server")
         self.device_name = "/dev/ttyACM0"
         self.ser = serial.Serial(self.device_name, 9600, timeout=0.1)
+        self.state = 'idle'
         # self.subscriber = self.create_subscription(
         #     Num, "topic", self.serial_listener_callback, 10
         # )
@@ -48,16 +49,41 @@ class SerialServer(Node):
 
     def move_motor(self):
         print()
-        if self.num_messages_sent % 10 == 0:
-            self.position += 3 * 8 * 200 # rotations * microsteps * steps for 3 rotations
+        # if self.num_messages_sent % 10 == 0:
+        #     self.position += 3 * 8 * 200 # rotations * microsteps * steps for 3 rotations
         # elif self.num_messages_sent % 10 == 5:
         #     self.position = 0
         self.num_messages_sent += 1
 
         # self.send_cmd({"motor_0": {"position": self.position}})
         # self.send_cmd({"motor_1": {"position": self.position}})
-        self.send_cmd({"motor_2": {"position": self.position}})
-        self.send_cmd({"motor_3": {"position": -self.position}})
+        # self.send_cmd({"motor_2": {"position": self.position}})
+        # self.send_cmd({"motor_3": {"position": -self.position}})
+        # self.receive_cmd()
+
+        if self.num_messages_sent < 10:
+            self.state = 'idle'
+        elif self.num_messages_sent < 20:
+            self.state = '1'
+        elif self.num_messages_sent < 30:
+            self.state = '2'
+        elif self.num_messages_sent < 40:
+            self.state = '3'
+
+
+        match self.state:
+            case 'idle':
+                time.sleep(1)
+            case '1':
+                self.send_cmd({"motor_0": 100})
+                self.send_cmd({"motor_1": 300})
+            case '2':
+                self.send_cmd({"motor_1": 200})
+            case '3':
+                self.send_cmd({"motor_0": 0})
+                self.send_cmd({"motor_1": 0})
+
+
         self.receive_cmd()
         print()
         print("========================")
