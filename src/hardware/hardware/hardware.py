@@ -27,7 +27,23 @@ class SerialServer(Node):
 
         self.num_messages_sent = 0
         self.position = 0
-        self.timer = self.create_timer(10.0 / 10, self.move_motor)
+        self.timer = self.create_timer(10.0 / 10, self.move_motors)
+    
+    def move_motor(self,motor, position):
+        motor_key = f"motor_{motor}"
+        match motor:
+            case 0:
+                factor = 30
+            case 1:
+                factor = 10
+            case 2:
+                factor = 10
+            case 3:
+                factor = 50
+            case 4:
+                factor = 30
+        self.send_cmd({motor_key: {"position": position  * factor}})
+
 
     def send_cmd(self, cmd):
         cmd = json.dumps(cmd)
@@ -47,7 +63,7 @@ class SerialServer(Node):
             print("\033[95mReply from Arduino:\033[0m")
             print("< " + line)
 
-    def move_motor(self):
+    def move_motors(self):
         print()
         # if self.num_messages_sent % 10 == 0:
         #     self.position += 3 * 8 * 200 # rotations * microsteps * steps for 3 rotations
@@ -61,27 +77,43 @@ class SerialServer(Node):
         # self.send_cmd({"motor_3": {"position": -self.position}})
         # self.receive_cmd()
 
-        if self.num_messages_sent < 10:
+        if self.num_messages_sent < 1:
             self.state = 'idle'
-        elif self.num_messages_sent < 20:
+        elif self.num_messages_sent < 7:
             self.state = '1'
-        elif self.num_messages_sent < 30:
+        elif self.num_messages_sent < 10:
             self.state = '2'
-        elif self.num_messages_sent < 40:
+        elif self.num_messages_sent < 17:
             self.state = '3'
+        else:
+            self.state = 'idle'
 
 
         match self.state:
             case 'idle':
-                time.sleep(1)
+                print("idling")
+                time.sleep(0.1)
             case '1':
-                self.send_cmd({"motor_0": 100})
-                self.send_cmd({"motor_1": 300})
+                time.sleep(0.1)
+                self.move_motor(0, 100)
+                self.move_motor(1, 100)
+                self.move_motor(2, -100)
+                self.move_motor(3, -100)
             case '2':
-                self.send_cmd({"motor_1": 200})
+                time.sleep(0.1)
+                self.move_motor(3, -130)
             case '3':
-                self.send_cmd({"motor_0": 0})
-                self.send_cmd({"motor_1": 0})
+                time.sleep(0.1)
+                self.move_motor(0, 0)
+                self.move_motor(1, 0)
+                self.move_motor(2, 0)
+                self.move_motor(3, 0)
+            case '4':
+                time.sleep(0.1)
+                # self.move_motor(0, 0)
+                # self.move_motor(1, 0)
+                # self.move_motor(2, 0)
+                # self.move_motor(3, 0)
 
 
         self.receive_cmd()
