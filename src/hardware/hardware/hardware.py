@@ -95,10 +95,10 @@ class SerialServer(Node):
                 time.sleep(0.1)
             case '1':
                 time.sleep(0.1)
-                self.move_motor(0, 100)
-                self.move_motor(1, 100)
-                self.move_motor(2, -100)
-                self.move_motor(3, -100)
+                self.move_motor(0, 200)
+                self.move_motor(1, 150)
+                self.move_motor(2, -150)
+                self.move_motor(3, -200)
             case '2':
                 time.sleep(0.1)
                 self.move_motor(3, -130)
