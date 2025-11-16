@@ -8,7 +8,7 @@
 
 #define SERIAL_QUEUE_LENGTH 300
 
-#define NUM_MOTORS 7
+#define NUM_MOTORS 6
 // Red wires
 char dir_pins[NUM_MOTORS] = {51, 45, 39, 12, 9, 6};
 // Yellow wires
@@ -22,7 +22,7 @@ SerialQueue serial_queue = SerialQueue(serial_buf, SERIAL_QUEUE_LENGTH);
 AccelStepper steppers[NUM_MOTORS];
 
 unsigned long last_loop_time;
-
+bool is_running = true;
 
 void setup() {
   for (int i = 0; i < NUM_MOTORS; i++) {
@@ -47,6 +47,13 @@ void setup() {
 }
 
 void useParsedData(JsonDocument json) {
+  String keyswitch_key = "killswitch";
+  bool killswitch = json[keyswitch_key];
+  if (killswitch) {
+    is_running = false;
+    return;
+  }
+  
   for (int i = 0; i < NUM_MOTORS; i++) {
     char enable_pin = enable_pins[i];
     
@@ -78,6 +85,10 @@ void loop() {
       Serial.println(res.c_str());
   } else if (res.is_data_available()){
       useParsedData(json);
+  }
+
+  if (!is_running) {
+    return;
   }
 
   // accelstepper stuff
