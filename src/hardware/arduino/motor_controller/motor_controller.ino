@@ -1,0 +1,87 @@
+#include <ArduinoJson.h>
+// include AccelStepper, docs here: https://www.airspayce.com/mikem/arduino/AccelStepper/index.html
+// also here: https://hackaday.io/project/183279/details/ 
+#include <AccelStepper.h>
+#include "data_structures.h"
+
+#define MOTOR_INTERFACE_TYPE 1
+
+#define SERIAL_QUEUE_LENGTH 300
+
+#define NUM_MOTORS 7
+// Red wires
+char dir_pins[NUM_MOTORS] = {51, 45, 39, 12, 9, 6};
+// Yellow wires
+char step_pins[NUM_MOTORS] = {53, 47, 41, 11, 8, 5};
+// Blue wires
+char enable_pins[NUM_MOTORS] = {49, 43, 37, 13, 10, 7};
+
+char serial_buf[SERIAL_QUEUE_LENGTH];
+SerialQueue serial_queue = SerialQueue(serial_buf, SERIAL_QUEUE_LENGTH);
+
+AccelStepper steppers[NUM_MOTORS];
+
+unsigned long last_loop_time;
+
+
+void setup() {
+  for (int i = 0; i < NUM_MOTORS; i++) {
+    char step_pin = step_pins[i];
+    char dir_pin = dir_pins[i];
+    char enable_pin = enable_pins[i];
+    steppers[i] = AccelStepper(MOTOR_INTERFACE_TYPE, step_pin, dir_pin);
+
+    // NOTE: doesn't affect MultiStepper
+    steppers[i].setMaxSpeed(3000);
+    steppers[i].setAcceleration(1000);
+
+    // make all motors hold their position when not in use
+    pinMode(enable_pin, OUTPUT); 
+    digitalWrite(enable_pin, LOW);
+  }
+
+  Serial.begin(9600);
+
+  while (!Serial) continue;
+  last_loop_time = millis();
+}
+
+void useParsedData(JsonDocument json) {
+  for (int i = 0; i < NUM_MOTORS; i++) {
+    char enable_pin = enable_pins[i];
+    
+    String motor_key = String("motor_") + i;
+    auto motor_json = json[motor_key].as<JsonObject>();
+    if (motor_json["position"].is<int>()) {
+      long position = motor_json["position"];
+
+      auto &stepper = steppers[i];
+      if(position != stepper.targetPosition()) {
+        // Resets speed, so don't call it in a loop
+        stepper.moveTo(position);
+      }
+    }
+  }
+}
+
+void loop() {
+  unsigned long delta = millis() - last_loop_time;
+  if (delta > 3) {
+    Serial.println("{\"overrun_delta\":" + String(delta));
+  }
+  last_loop_time = millis();
+
+  JsonDocument json;
+  const SerialReadResult res = serial_queue.try_get_json(json);
+  if (!res.is_ok()) {
+      Serial.print("Read error: ");
+      Serial.println(res.c_str());
+  } else if (res.is_data_available()){
+      useParsedData(json);
+  }
+
+  // accelstepper stuff
+  for (int i = 0; i < NUM_MOTORS; i++) {
+    steppers[i].run();
+  }
+}
