@@ -37,10 +37,8 @@ class SerialServer(Node):
             case 1:
                 factor = 10
             case 2:
-                factor = 10
-            case 3:
                 factor = 50
-            case 4:
+            case 3:
                 factor = 30
         self.send_cmd({motor_key: {"position": position  * factor}})
 
@@ -97,17 +95,15 @@ class SerialServer(Node):
                 time.sleep(0.1)
                 self.move_motor(0, 200)
                 self.move_motor(1, 150)
-                self.move_motor(2, -150)
-                self.move_motor(3, -200)
+                self.move_motor(2, -200)
             case '2':
                 time.sleep(0.1)
-                self.move_motor(3, -130)
+                self.move_motor(2, -130)
             case '3':
                 time.sleep(0.1)
                 self.move_motor(0, 0)
                 self.move_motor(1, 0)
                 self.move_motor(2, 0)
-                self.move_motor(3, 0)
             case '4':
                 time.sleep(0.1)
                 # self.move_motor(0, 0)
