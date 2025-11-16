@@ -8,13 +8,13 @@
 
 #define SERIAL_QUEUE_LENGTH 300
 
-#define NUM_MOTORS 6
+#define NUM_MOTORS 5
 // Red wires
-char dir_pins[NUM_MOTORS] = {51, 45, 39, 12, 9, 6};
+char dir_pins[NUM_MOTORS] = {51, 45, 12, 9, 6};
 // Yellow wires
-char step_pins[NUM_MOTORS] = {53, 47, 41, 11, 8, 5};
+char step_pins[NUM_MOTORS] = {53, 47, 11, 8, 5};
 // Blue wires
-char enable_pins[NUM_MOTORS] = {49, 43, 37, 13, 10, 7};
+char enable_pins[NUM_MOTORS] = {49, 43, 13, 10, 7};
 
 char serial_buf[SERIAL_QUEUE_LENGTH];
 SerialQueue serial_queue = SerialQueue(serial_buf, SERIAL_QUEUE_LENGTH);
