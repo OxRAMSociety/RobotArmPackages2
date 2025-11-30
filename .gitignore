@@ -30,3 +30,6 @@ AMENT_IGNORE
 
 .venv
 .need_to_resume_installation
+
+# .vscode settings
+.vscode/

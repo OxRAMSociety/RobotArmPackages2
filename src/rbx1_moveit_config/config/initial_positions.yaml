@@ -1,0 +1,11 @@
+# Default initial positions for rbx1_description's ros2_control fake system
+
+initial_positions:
+  gripper_idol_gear_joint: 0
+  gripper_servo_gear_joint: 0
+  joint_1_base_shoulder: 0
+  joint_2_shoulder_arm: 0
+  joint_3_arm_upper_forearm: 0
+  joint_4_upper_forearm_forearm: 0
+  joint_5_forearm_wrist: 0
+  joint_6_wrist_hand: 0

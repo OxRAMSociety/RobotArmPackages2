@@ -1,0 +1,34 @@
+# This config file is used by ros2_control
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    rbx1_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+
+    rbx1_hand_controller:
+      type: position_controllers/GripperActionController
+
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+rbx1_arm_controller:
+  ros__parameters:
+    joints:
+      - joint_1_base_shoulder
+      - joint_2_shoulder_arm
+      - joint_3_arm_upper_forearm
+      - joint_4_upper_forearm_forearm
+      - joint_5_forearm_wrist
+      - joint_6_wrist_hand
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_nonzero_velocity_at_trajectory_end: true
+rbx1_hand_controller:
+  ros__parameters:
+    joint: gripper_idol_gear_joint
