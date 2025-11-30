@@ -63,4 +63,18 @@ install_moveit(){
 
 	# install vcstool
 	sudo apt install python3-vcstool -y
+
+	# install moeveit2
+	sudo apt-get install -y \
+    ros-jazzy-rviz2 \
+    ros-jazzy-moveit \
+    ros-jazzy-xacro \
+    ros-jazzy-joint-state-publisher-gui \
+    ros-jazzy-diagnostics \
+    ros-jazzy-ros2-control \
+    ros-jazzy-ros2-controllers \
+    ros-jazzy-joint-state-broadcaster \
+    ros-jazzy-joint-trajectory-controller \
+    ros-jazzy-ros-gz \
+    ros-jazzy-ros-gz-sim 
 }
