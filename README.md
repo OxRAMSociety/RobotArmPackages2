@@ -6,12 +6,13 @@ To use, `git clone --recursive https://github.com/OxRAMSociety/RobotArmPackages2
 ## Installation:
 We recommend that you use Ubuntu 24.04 with ROS2 Jazzy Jalisco
 
-1. Install Ubuntu 24.04 (we recommend using a VM, such as [VirtualBox](https://www.virtualbox.org/))
-2. Clone this repository into a folder, `cd` into the folder.
-3. Run `./install.py first-install`. It should finish without errors and tell you to reboot.
-4. Reboot.
-5. Run `./install.py first-install` again
-6. (Optional) run `./install.py setup_cv_training` if you will be training the CV model or `./install.py setup_moveit` if you will be working with moveit
+1. Install Ubuntu 24.04 (we recommend using a VM, such as [wsl](https://www.virtualbox.org/](https://learn.microsoft.com/en-us/windows/wsl/install) or [multipass](https://canonical.com/multipass) on Mac.
+2. Update the system: `sudo apt update && sudo apt upgrade`
+3. Clone this repository into a folder, `cd` into the folder.
+4. Run `./install.py first-install`. It should finish without errors and tell you to reboot.
+5. Reboot.
+6. Run `./install.py first-install` again
+7. (Optional) run `./install.py setup_cv_training` if you will be training the CV model or `./install.py setup_moveit` if you will be working with moveit
 
 ## Usage
 Run `source ./setup.sh` when first opening in a new terminal
