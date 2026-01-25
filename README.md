@@ -6,7 +6,7 @@ To use, `git clone --recursive https://github.com/OxRAMSociety/RobotArmPackages2
 ## Installation:
 We recommend that you use Ubuntu 24.04 with ROS2 Jazzy Jalisco
 
-1. Install Ubuntu 24.04 (we recommend using a VM, such as [wsl](https://www.virtualbox.org/](https://learn.microsoft.com/en-us/windows/wsl/install) or [multipass](https://canonical.com/multipass) on Mac.
+1. Install Ubuntu 24.04 (we recommend using a VM, such as [wsl](https://learn.microsoft.com/en-us/windows/wsl/install) or [multipass](https://canonical.com/multipass) on Mac.
 2. Update the system: `sudo apt update && sudo apt upgrade`
 3. Clone this repository into a folder, `cd` into the folder.
 4. Run `./install.py first-install`. It should finish without errors and tell you to reboot.
