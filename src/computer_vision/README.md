@@ -1,19 +1,31 @@
-# Setup
+# Computer Vision
+## Repository Organisation
+### computer_vision
+board_detection.py - Contains a ROS2 node that takes an image of a chessboard and identify the inner and outer corners of the chessboard, publishing whether coordinates have been found and their 2D image coordinates
+
+### config
+Contains camera configuration for the club webcam if using.
+
+### test
+Three basic tests and 3 images of random chessboards
+
+### train
+chess_piece_detection.py - Contains code to load data from roboflow and train a yolov8n model with it
+
+
+## Setup
 
 1. (Optional) If you are planning on training the YOLO model, copy `.roboflow_key.example` to `.roboflow_key`, get your Roboflow key and write it into the file
 2. Get camera calibration and parameter files and put them into `config/cam_params.yaml` and `config/camera_info.yaml`. This can be done in 2 ways:
-- Copy over the templates `config/cam_params_template.yaml` and `config/camera_info_template.yaml`
-- Calibrate the camera by yourself (See the section below).
+- Copy over the templates `config/cam_params_template.yaml` and `config/camera_info_template.yaml`. This is done by default in `install.py`.
+- Calibrate the camera by yourself.
 
-## TODO: add documentation for how to calibrate the camera
-TODO: calibrate camera
-TODO: optimise params
 
-# Usage
-## Running the nodes
+## Usage
+### Running the nodes
 `board_detection` node doesn't use any extra parameters: just do `ros2 run computer_vision board_detection`
 
-## Debugging
+### Debugging
 To start the camera node directly, run `ros2 run usb_cam usb_cam_node_exe --ros-args --params-file config/cam_params.yaml`
 
 <<<<<<< HEAD
@@ -23,3 +35,23 @@ To simulate a camera with an image, run `ros2 run stub_scripts compressed_image_
 >>>>>>> 66096a906ba684dc886a0a1dffdedbc0f3dc3a80
 
 To view camera output, run `rqt`, select "Plugins/visualization/Image view" and select the correct topic
+
+
+## Resources
+### YOLO
+YOLOv8 Model Specification - https://github.com/ultralytics/ultralytics/blob/main/docs/en/models/yolov8.md
+
+### Camera Calibration
+Monocular camera calibration using ROS - https://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration
+
+### Roboflow
+Roboflow Guide - https://blog.roboflow.com/train-yolov8-obb-model/
+
+### Ros Intergration
+YOLO integration - https://github.com/leggedrobotics/darknet_ros
+Ultralytics integration - https://docs.ultralytics.com/guides/ros-quickstart/#use-ultralytics-with-ros-sensor_msgsimage
+
+### Webcams
+Using Android phone as a webcam - https://adityatelange.in/blog/android-phone-webcam-linux/
+Physical Webcam model - https://amzn.eu/d/99ZbQrP
+

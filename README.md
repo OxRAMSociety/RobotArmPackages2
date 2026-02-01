@@ -6,12 +6,13 @@ To use, `git clone --recursive https://github.com/OxRAMSociety/RobotArmPackages2
 ## Installation:
 We recommend that you use Ubuntu 24.04 with ROS2 Jazzy Jalisco
 
-1. Install Ubuntu 24.04 (we recommend using a VM, such as [VirtualBox](https://www.virtualbox.org/))
-2. If you do not have ROS, run `./install_ros.sh` from the terminal. This script is designed to not break if run multiple times.
-3. Reboot
-4. Follow README.md for packages. For example, you will need the camera configuration files sorted out to be able to compile `computer_vison`
-5. Then, run `./install_workspace.sh` at the root of this repository. This script is designed to not break if it is run multiple times
-6. (Optional) If you want to run computer vision, install libraries using `./install_cv_packages.sh`
+1. Install Ubuntu 24.04 (we recommend using a VM, such as [wsl](https://learn.microsoft.com/en-us/windows/wsl/install) or [multipass](https://canonical.com/multipass) on Mac.
+2. Update the system: `sudo apt update && sudo apt upgrade`
+3. Clone this repository into a folder, `cd` into the folder.
+4. Run `./install.py first-install`. It should finish without errors and tell you to reboot.
+5. Reboot.
+6. Run `./install.py first-install` again
+7. (Optional) run `./install.py setup_cv_training` if you will be training the CV model or `./install.py setup_moveit` if you will be working with moveit
 
 ## Usage
 Run `source ./setup.sh` when first opening in a new terminal
@@ -19,6 +20,8 @@ Run `source ./setup.sh` when first opening in a new terminal
 Run `source ./rebuild.sh` in the terminal to rebuild code
 
 Run `./test.sh` to run the tests for the packages
+
+It is safe to re-run `./install.py reinstall` multiple times
 
 <!-- ## Running the code: -->
 
