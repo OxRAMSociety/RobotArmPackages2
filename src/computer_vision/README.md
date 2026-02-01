@@ -1,13 +1,25 @@
+# Computer Vision
+## Repository Organisation
+### computer_vision
+board_detection.py - Contains a ROS2 node that takes an image of a chessboard and identify the inner and outer corners of the chessboard, publishing whether coordinates have been found and their 2D image coordinates
+
+### config
+Contains camera configuration for the club webcam if using.
+
+### test
+Three basic tests and 3 images of random chessboards
+
+### train
+chess_piece_detection.py - Contains code to load data from roboflow and train a yolov8n model with it
+
+
 # Setup
 
 1. (Optional) If you are planning on training the YOLO model, copy `.roboflow_key.example` to `.roboflow_key`, get your Roboflow key and write it into the file
 2. Get camera calibration and parameter files and put them into `config/cam_params.yaml` and `config/camera_info.yaml`. This can be done in 2 ways:
 - Copy over the templates `config/cam_params_template.yaml` and `config/camera_info_template.yaml`. This is done by default in `install.py`.
-- Calibrate the camera by yourself (See the section below).
+- Calibrate the camera by yourself.
 
-## TODO: add documentation for how to calibrate the camera
-TODO: calibrate camera
-TODO: optimise params
 
 # Usage
 ## Running the nodes
