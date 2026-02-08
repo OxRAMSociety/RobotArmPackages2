@@ -13,14 +13,14 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='mic',
-    maintainer_email='misha.nekrasov@gmail.com',
-    description='TODO: Package description',
+    maintainer='Thomas-August',
+    maintainer_email='tommy.august@btinternet.com',
+    description='Controlling motion of the motors based on high-level commands',
     license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'hardware_interface = motion_planning.hardware_interface:main'
+            'rbx1MotionPlanningServer = motion_planning.rbx1MotionPlanningServer:main'
         ],
     },
 )
