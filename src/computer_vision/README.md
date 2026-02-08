@@ -34,7 +34,11 @@ To view camera output, run `rqt`, select "Plugins/visualization/Image view" and 
 
 
 ## Resources
+### OpenCV
+OpenCV Tutorial - https://www.youtube.com/watch?v=oXlwWbU8l2o
+
 ### YOLO
+How YOLO works - https://www.youtube.com/watch?v=svn9-xV7wjk
 YOLOv8 Model Specification - https://github.com/ultralytics/ultralytics/blob/main/docs/en/models/yolov8.md
 
 ### Camera Calibration
