@@ -10,7 +10,7 @@ Contains camera configuration for the club webcam if using.
 Three basic tests and 3 images of random chessboards
 
 ### train
-chess_piece_detection.py - Contains code to load data from roboflow and train a yolov8n model with it
+chess_piece_detection_training.py - Contains code to load data from roboflow and train a yolov8n model with it
 
 
 ## Setup
