@@ -63,17 +63,7 @@ class SerialServer(Node):
 
     def move_motors(self):
         print()
-        # if self.num_messages_sent % 10 == 0:
-        #     self.position += 3 * 8 * 200 # rotations * microsteps * steps for 3 rotations
-        # elif self.num_messages_sent % 10 == 5:
-        #     self.position = 0
         self.num_messages_sent += 1
-
-        # self.send_cmd({"motor_0": {"position": self.position}})
-        # self.send_cmd({"motor_1": {"position": self.position}})
-        # self.send_cmd({"motor_2": {"position": self.position}})
-        # self.send_cmd({"motor_3": {"position": -self.position}})
-        # self.receive_cmd()
 
         if self.num_messages_sent < 1:
             self.state = 'idle'
@@ -85,7 +75,6 @@ class SerialServer(Node):
             self.state = '3'
         else:
             self.state = 'idle'
-
 
         match self.state:
             case 'idle':
@@ -125,8 +114,11 @@ def main(args=None):
         print("Aborting")
         serial_server.send_cmd({"killswitch": True})
 
-        import sys
-        sys.exit()
+        exiting = input("Press ENTER to continue...")
+        if (exiting):
+            import sys
+            sys.exit()
+        serial_server.send_cmd({"killswitch": False})
 
     signal.signal(signal.SIGINT, interrupt_handler)
     rclpy.spin(serial_server)

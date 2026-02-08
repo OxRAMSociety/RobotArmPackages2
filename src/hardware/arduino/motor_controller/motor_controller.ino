@@ -22,7 +22,7 @@ SerialQueue serial_queue = SerialQueue(serial_buf, SERIAL_QUEUE_LENGTH);
 AccelStepper steppers[NUM_MOTORS];
 
 unsigned long last_loop_time;
-bool is_running = true;
+bool paused = false;
 
 void setup() {
   for (int i = 0; i < NUM_MOTORS; i++) {
@@ -47,10 +47,14 @@ void setup() {
 }
 
 void useParsedData(JsonDocument json) {
-  String keyswitch_key = "killswitch";
-  bool killswitch = json[keyswitch_key];
+  String killswitch_key = "killswitch";
+  bool killswitch = json[killswitch_key];
   if (killswitch) {
-    is_running = false;
+    paused = true;
+    return;
+  } 
+
+  if (paused) {
     return;
   }
   
@@ -87,7 +91,7 @@ void loop() {
       useParsedData(json);
   }
 
-  if (!is_running) {
+  if (paused) {
     return;
   }
 

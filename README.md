@@ -13,6 +13,7 @@ We recommend that you use Ubuntu 24.04 with ROS2 Jazzy Jalisco
 5. Reboot.
 6. Run `./install.py first-install` again
 7. (Optional) run `./install.py setup_cv_training` if you will be training the CV model or `./install.py setup_moveit` if you will be working with moveit
+8. Now, run `./rebuild.sh` to build the project.
 
 ## Usage
 Run `source ./setup.sh` when first opening in a new terminal
