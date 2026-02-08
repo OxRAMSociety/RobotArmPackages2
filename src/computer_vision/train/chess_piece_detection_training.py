@@ -4,7 +4,7 @@ import yaml
 from ultralytics import YOLO
 
 try:
-    with open(".roboflow_key", "r") as f:
+    with open("src/computer_vision/config/.roboflow_key", "r") as f:
         ROBOFLOW_KEY = f.read().strip()
 except FileNotFoundError:
     from sys import exit, stderr
@@ -29,4 +29,4 @@ with open(f"{dataset.location}/data.yaml", "w") as file:
 
 model = YOLO("yolov8n.pt")
 
-results = model.train(data=f"{dataset.location}/data.yaml", epochs=100, imgsz=640)
+results = model.train(data=f"{dataset.location}/data.yaml", epochs=100, imgsz=640, device="cpu", batch=8)
