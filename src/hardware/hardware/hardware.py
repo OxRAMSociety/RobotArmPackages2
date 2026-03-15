@@ -14,7 +14,7 @@ class SerialServer(Node):
         super().__init__("serial_server")
         self.device_name = "/dev/ttyACM0"
         self.ser = serial.Serial(self.device_name, 9600, timeout=0.1)
-        self.state = 'idle'
+        self.state = '0'
         # self.subscriber = self.create_subscription(
         #     Num, "topic", self.serial_listener_callback, 10
         # )
@@ -42,8 +42,14 @@ class SerialServer(Node):
                 factor = 10
                 return
             case 2:
-                factor = 50
+                factor = 2
             case 3:
+                factor = 4
+            case 4:
+                factor = 1.5
+            case 5:
+                factor = 2
+            case _:
                 factor = 30
         self.send_cmd({motor_key: {"position": int(position  * factor * multiplier)}})
 
@@ -71,39 +77,84 @@ class SerialServer(Node):
         self.num_messages_sent += 1
 
         if self.num_messages_sent < 1:
-            self.state = 'idle'
-        elif self.num_messages_sent < 7:
+            self.state = '0'
+        elif self.num_messages_sent < 5:
             self.state = '1'
-        elif self.num_messages_sent < 10:
+        elif self.num_messages_sent < 9:
             self.state = '2'
-        elif self.num_messages_sent < 17:
+        elif self.num_messages_sent < 12:
             self.state = '3'
+        elif self.num_messages_sent < 15:
+            self.state = '4'
+        elif self.num_messages_sent < 18:
+            self.state = '5'
+        elif self.num_messages_sent < 21:
+            self.state = '6'
+        elif self.num_messages_sent < 24:
+            self.state = '7'
         else:
-            self.state = 'idle'
+            self.state = '0'
 
+        variable = 30
         match self.state:
-            case 'idle':
+            case '0':
                 print("idling")
                 time.sleep(0.1)
             case '1':
-                time.sleep(0.1)
-                self.move_motor(0, 200)
-                self.move_motor(1, 150)
-                self.move_motor(2, -200)
+                print("state 1")
+                self.move_motor(0, 150)
+                # self.move_motor(1, 200)
+                self.move_motor(2, 600)
+                self.move_motor(3, -250)
+                self.move_motor(4, 0)
+                self.move_motor(5, 100)
+                # time.sleep(0.1)
             case '2':
-                time.sleep(0.1)
-                self.move_motor(2, -130)
+                print("state 2")
+                # self.move_motor(0, 450)
+                # self.move_motor(1, 200)
+                # self.move_motor(2, 200)
+                self.move_motor(3, -100)
+                # self.move_motor(4, 200)
+                # self.move_motor(5, 200)
+                # time.sleep(0.1)
             case '3':
-                time.sleep(0.1)
+                print("state 3")
+                # self.move_motor(0, 150)
+                # self.move_motor(1, 200)
+                # self.move_motor(2, 200)
+                self.move_motor(3, -250-variable)
+                # self.move_motor(4, 200)
+                # self.move_motor(5, 200)
+                # time.sleep(0.1)
+            case '4':
+                print("state 4")
+                # self.move_motor(0, 200)
+                # self.move_motor(1, 200)
+                self.move_motor(2, -600)
+                # self.move_motor(3, 200)
+                # self.move_motor(4, 200)
+                # self.move_motor(5, 200)
+                # time.sleep(0.1)
+            case '5':
+                print("state 5")
+                self.move_motor(3, -100-variable)
+                # self.move_motor(1, 200)
+                # self.move_motor(2, 200)
+                # self.move_motor(3, 200)
+                # self.move_motor(4, 200)
+                # self.move_motor(5, 200)
+            case '6':
+                print("state 6")
+                self.move_motor(3, -250-2*variable)
+            case '7':
+                print("state 7")
                 self.move_motor(0, 0)
                 self.move_motor(1, 0)
                 self.move_motor(2, 0)
-            case '4':
-                time.sleep(0.1)
-                # self.move_motor(0, 0)
-                # self.move_motor(1, 0)
-                # self.move_motor(2, 0)
-                # self.move_motor(3, 0)
+                self.move_motor(3, -2*variable)
+                self.move_motor(4, 0)
+                self.move_motor(5, 0)
 
 
         self.receive_cmd()
@@ -116,7 +167,7 @@ def main(args=None):
     serial_server = SerialServer()
 
     def interrupt_handler(sig, frame):
-        print("Aborting")
+        print("\nPausing..")
         serial_server.send_cmd({"killswitch": True})
 
         exiting = input("Press ENTER to continue...")
