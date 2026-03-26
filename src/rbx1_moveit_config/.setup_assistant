@@ -1,0 +1,25 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: rbx1_description
+    relative_path: urdf/rbx1.urdf
+  srdf:
+    relative_path: config/rbx1_description.srdf
+  package_settings:
+    author_name: Tommy August
+    author_email: tommy.august@btinternet.com
+    generated_timestamp: 1763295251
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
+  modified_urdf:
+    xacros:
+      - control_xacro
+  control_xacro:
+    command:
+      - position
+    state:
+      - position
+      - velocity
