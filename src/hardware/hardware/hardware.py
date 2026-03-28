@@ -31,16 +31,21 @@ class SerialServer(Node):
     
     def move_motor(self,motor, position):
         motor_key = f"motor_{motor}"
+        multiplier = 1
         match motor:
             case 0:
-                factor = 30
+                factor = 10
+                self.send_cmd({"motor_0": {"position": (position  * factor * multiplier)}})
+                self.send_cmd({"motor_1": {"position": (position  * factor * multiplier)}})
+                return
             case 1:
                 factor = 10
+                return
             case 2:
                 factor = 50
             case 3:
                 factor = 30
-        self.send_cmd({motor_key: {"position": position  * factor}})
+        self.send_cmd({motor_key: {"position": int(position  * factor * multiplier)}})
 
 
     def send_cmd(self, cmd):
