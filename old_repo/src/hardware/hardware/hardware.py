@@ -124,7 +124,6 @@ def main(args=None):
     def interrupt_handler(sig, frame):
         print("Aborting")
         serial_server.send_cmd({"killswitch": True})
-
         import sys
         sys.exit()
 
